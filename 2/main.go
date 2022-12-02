@@ -31,7 +31,8 @@ func main() {
 	var totalScore int
 	for scanner.Scan() {
 		line := strings.Fields(scanner.Text())
-		totalScore += determineScore(line[0], line[1])
+		totalScore += riggedScore(line[0], line[1])
+		// fmt.Printf("o:%s, y:%s\n", line[0], line[1])
 	}
 	fmt.Printf("Total score is: %v\n", totalScore)
 }
@@ -71,13 +72,49 @@ func determineScore(opp, you string) int {
 	return outcome + shapeScore(you)
 }
 
+func riggedScore(opp, you string) int {
+
+	outcome := 0
+	switch opp {
+	case oppRock:
+		switch you {
+		case "X":
+			outcome = 0 + shapeScore(youScissors)
+		case "Y":
+			outcome = 3 + shapeScore(youRock)
+		case "Z":
+			outcome = 6 + shapeScore(youPaper)
+		}
+	case oppPaper:
+		switch you {
+		case "X":
+			outcome = 0 + shapeScore(youRock)
+		case "Y":
+			outcome = 3 + shapeScore(youPaper)
+		case "Z":
+			outcome = 6 + shapeScore(youScissors)
+		}
+	case oppScissors:
+		switch you {
+		case "X":
+			outcome = 0 + shapeScore(youPaper)
+		case "Y":
+			outcome = 3 + shapeScore(youScissors)
+		case "Z":
+			outcome = 6 + shapeScore(youRock)
+		}
+	}
+
+	return outcome
+}
+
 func shapeScore(shape string) int {
 	switch shape {
-	case "X":
+	case oppRock, youRock:
 		return 1
-	case "Y":
+	case oppPaper, youPaper:
 		return 2
-	case "Z":
+	case oppScissors, youScissors:
 		return 3
 	}
 	return 0
