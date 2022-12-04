@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -55,13 +57,17 @@ func fillSlice(cleaningID []string) []int {
 
 func checkForOverlap(first, second []int) bool {
 
-	if first[0] <= second[0] && first[len(first)-1] >= second[len(second)-1] {
-		return true
+	// if first[0] <= second[0] && first[len(first)-1] >= second[len(second)-1] {
+	// 	return true
+	// }
+	// if second[0] <= first[0] && second[len(second)-1] >= first[len(first)-1] {
+	// 	return true
+	// }
+	for _, v := range first {
+		if slices.Contains(second, v) {
+			return true
+		}
 	}
-	if second[0] <= first[0] && second[len(second)-1] >= first[len(first)-1] {
-		return true
-	}
-
 	return false
 
 }
