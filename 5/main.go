@@ -55,10 +55,12 @@ func main() {
 
 		temp := boxSet[from][len(boxSet[from])-amountToMove:]
 		boxSet[from] = slices.Delete(boxSet[from], len(boxSet[from])-amountToMove, len(boxSet[from]))
-		for i := range temp {
-			i = len(temp) - 1 - i
-			boxSet[to] = append(boxSet[to], temp[i])
-		}
+		boxSet[to] = append(boxSet[to], temp...)
+
+		// for i := range temp {
+		// 	i = len(temp) - 1 - i
+		// 	boxSet[to] = append(boxSet[to], temp[i])
+		// }
 
 	}
 	for key, value := range boxSet {
