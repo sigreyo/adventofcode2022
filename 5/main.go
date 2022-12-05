@@ -9,6 +9,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -35,57 +37,51 @@ func main() {
 		}
 		counter++
 	}
-	for key, value := range boxSet {
+	for key := range boxSet {
 		reverse(boxSet[key])
-
-		for i, v := range value {
-			if v == " " {
-				value = value[0:i:i]
-				break
-			}
-		}
-		// fmt.Println(key, value)
-
 	}
+	counter = 0
 	actions := readActions()
 
 	for _, v := range actions {
+		counter++
 		re := regexp.MustCompile("[0-9]+")
 		instructions := re.FindAllString(v, -1)
+		boxSet = removeBlanks(boxSet)
 
 		amountToMove, _ := strconv.Atoi(instructions[0])
 		from, _ := strconv.Atoi(instructions[1])
-		// to, _ := strconv.Atoi(instructions[2])
+		to, _ := strconv.Atoi(instructions[2])
 
-		tempMove := boxSet[from][len(boxSet[from])-amountToMove : amountToMove]
-		fmt.Println(tempMove)
-		// boxSet[to] = append(boxSet[from])
-
-		// fmt.Println(amountToMove, from, to)
-		// boxSet = move(amountToMove, from, to, boxSet)
-	}
-	// for key, value := range boxSet {
-	// 	fmt.Println(key, value)
-	// }
-
-}
-
-func move(amountToMove, from, to int, boxSet map[int][]string) (newSet map[int][]string) {
-	var tempMove []string
-
-	for i := range boxSet[from] {
-		i = len(boxSet[from]) - i - 1
-		if len(tempMove) != amountToMove {
-			tempMove = append(tempMove, boxSet[from][i])
+		temp := boxSet[from][len(boxSet[from])-amountToMove:]
+		boxSet[from] = slices.Delete(boxSet[from], len(boxSet[from])-amountToMove, len(boxSet[from]))
+		for i := range temp {
+			i = len(temp) - 1 - i
+			boxSet[to] = append(boxSet[to], temp[i])
 		}
-	}
-	for i := range tempMove {
-		boxSet[to] = append(boxSet[to], tempMove[i])
-	}
-	fmt.Println(tempMove)
 
-	return
+	}
+	for key, value := range boxSet {
+		fmt.Println(key, value[len(value)-1])
+	}
+
 }
+
+func removeBlanks(boxSet map[int][]string) map[int][]string {
+	for key, value := range boxSet {
+
+		for i, v := range value {
+			if v == " " {
+				boxSet[key] = value[0:i:i]
+				break
+			}
+		}
+
+	}
+	return boxSet
+
+}
+
 func reverse(s []string) {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
