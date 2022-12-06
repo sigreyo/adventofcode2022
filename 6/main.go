@@ -30,11 +30,21 @@ func main() {
 			string(stream[i+1]),
 			string(stream[i+2]),
 			string(stream[i+3]),
+			string(stream[i+4]),
+			string(stream[i+5]),
+			string(stream[i+6]),
+			string(stream[i+7]),
+			string(stream[i+8]),
+			string(stream[i+9]),
+			string(stream[i+10]),
+			string(stream[i+11]),
+			string(stream[i+12]),
+			string(stream[i+13]),
 		}
 
 		sort.Strings(temp)
 		if unique.StringsAreUnique(temp) {
-			fmt.Println(i + 4)
+			fmt.Println(i + 14)
 			break
 		}
 
