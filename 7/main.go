@@ -76,16 +76,53 @@ func main() {
 
 	// skip := ""
 
-	// var slice []string
+	var slice []string
 	// totPerPath := 0
-	// var grandtotal []string
+
+	var grandtotal []string
 	for i, path := range keys {
 		if i == 30 {
 			// break
 		}
 
-		fmt.Println(path, structure[path])
+		if structure[path] == 0 {
+			slice = append(slice, path)
+		}
+		if structure[path] <= 100000 && structure[path] != 0 {
+
+			if len(slice) > 0 {
+				for _, v := range slice {
+					v += " " + strconv.Itoa(structure[path])
+					grandtotal = append(grandtotal, v)
+
+				}
+				slice = nil
+
+			}
+			if structure[path] != 0 {
+				grandtotal = append(grandtotal, path+" "+strconv.Itoa(structure[path]))
+
+			}
+		}
+		if structure[path] > 100000 {
+			slice = nil
+		}
+
+		// fmt.Println(path, structure[path])
 	}
+	totInt := 0
+	for i := range grandtotal {
+		fmt.Println(grandtotal[i])
+		re := regexp.MustCompile("[0-9]+")
+		temp := re.FindString(grandtotal[i])
+		tempint, _ := strconv.Atoi(temp)
+		totInt += tempint
+	}
+
+	fmt.Println(totInt)
+	// for i := range slice {
+	// 	fmt.Println(slice[i])
+	// }
 }
 
 // for _, v := range grandtotal {
