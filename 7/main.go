@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -27,17 +28,34 @@ func main() {
 		}
 	}
 
-	structure := make(map[string][]string)
+	structure := make(map[string]int)
+	// structureWithInt := make(map[string]int)
+
 	path := ""
 	tempPath := ""
-	// total := 0
-	for _, value := range inputs {
+	total := 0
+	for index, value := range inputs {
+		if index == 40 {
+			// break
+		}
 		if value == "$ ls" {
 			continue
 		}
-		structure[path] = append(structure[path], value)
+		re := regexp.MustCompile("[0-9]+")
+		temp := re.FindAllString(value, -1)
 
+		//add total file values
+		ints := []int{}
+		total = 0
+		for i := range temp {
+			tempInt, _ := strconv.Atoi(temp[i])
+			ints = append(ints, tempInt)
+			total += ints[i]
+		}
+
+		structure[path] += total
 		if strings.Contains(value, "$ cd") && !strings.Contains(value, "..") {
+
 			tempPath = "/" + value[5:]
 			path += tempPath
 
@@ -45,90 +63,35 @@ func main() {
 		if strings.Contains(value, "$ cd ..") {
 			temp := strings.Split(path, "/")
 			path = strings.Join(temp[:len(temp)-1], "/")
-		}
-		// find := []string{}
-		// for _, size := range structure[path] {
-		// 	re := regexp.MustCompile("[0-9]+")
-		// 	temp := re.FindAllString(size, -1)
 
-		// 	for _, v := range temp {
-		// 		check10k, _ := strconv.Atoi(v)
-		// 		if check10k < 100000 {
-		// 			find = append(find, strconv.Itoa(check10k))
-		// 		}
-		// 	}
-		// }
-		// structure[path] = find
-		// fmt.Println(structure[path])
+		}
 
 	}
-	// for key, value := range structure {
-	// 	fmt.Println(key, value)
-	// }
-	// size per folder <100000
-	find := []string{}
-	for path, value := range structure {
-		find = []string{}
-		for _, v := range value {
-			re := regexp.MustCompile("[0-9]+")
-			temp := re.FindAllString(v, -1)
-			for _, v := range temp {
 
-				find = append(find, v)
-
-			}
-		}
-		value = find
-
-		totalSize := 0
-		for i := range value {
-			temp, _ := strconv.Atoi(value[i])
-			totalSize += temp
-
-		}
-		// if totalSize > 0 && totalSize < 100000 {
-		// 	// fmt.Println(path, value)
-		// }
-		fmt.Println(path, value)
-
+	keys := make([]string, 0, len(structure))
+	for k := range structure {
+		keys = append(keys, k)
 	}
-	// for path, value := range structure {
-	// 	fmt.Println(path, value)
+	sort.Strings(keys)
 
-	// }
+	// skip := ""
 
-	// totalSize := 0
+	// var slice []string
+	// totPerPath := 0
+	// var grandtotal []string
+	for i, path := range keys {
+		if i == 30 {
+			// break
+		}
 
-	// for level, value := range structure {
-	// 	re := regexp.MustCompile("[0-9]+")
-	// 	values := re.FindAllString(v, -1)
-
-	// }
-
-	// keys := make([]int, len(structure))
-	// for key := range structure {
-	// 	keys[key] = key
-	// 	// fmt.Println(key, value)
-	// }
-	// sort.Ints(keys)
-
-	// for i := range keys {
-	// 	i = len(keys) - 1 - i
-	// 	// fmt.Printf("level: %d %s\n", i, structure[i])
-	// 	for _, value := range structure[i] {
-	// 		if strings.Contains() {
-
-	// 		}
-	// 	}
-
-	// }
-	// for i := range structure {
-	// 	i = len(structure) - 1 - i
-	// 	fmt.Println(i)
-
-	// }
-
+		fmt.Println(path, structure[path])
+	}
 }
+
+// for _, v := range grandtotal {
+// 	fmt.Println(v)
+// }
+
 func addTotal(slice []string) string {
 	total := 0
 	for _, v := range slice {
